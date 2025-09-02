@@ -4,62 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OralVis</title>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .hidden { display: none; }
+    .container { max-width: 500px; margin: auto; }
+    h2 { color: #333; }
+    input, button { margin: 5px 0; padding: 10px; width: 100%; }
+    img { max-width: 100%; margin-top: 10px; }
+    .scan { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>OralVis Login</h2>
+    <div id="loginSection">
+      <input type="email" id="email" placeholder="Email" />
+      <input type="password" id="password" placeholder="Password" />
+      <button id="loginBtn">Login</button>
+      <p id="loginMessage"></p>
+    </div>
 
-  <!-- Header -->
-  <header>
-    <h1>OralVis Healthcare</h1>
-  </header>
+    <!-- Technician Section -->
+    <div id="technicianSection" class="hidden">
+      <h2>Upload Scan</h2>
+      <input type="text" id="patientName" placeholder="Patient Name" />
+      <input type="file" id="scanFile" />
+      <button id="uploadBtn">Upload</button>
+      <p id="uploadMessage"></p>
+    </div>
 
-  <!-- Login Section -->
-  <section id="login-section">
-    <h2>Login</h2>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
-    <button id="login-btn">Login</button>
-    <p id="login-message" class="message"></p>
-  </section>
+    <!-- Dentist Section -->
+    <div id="dentistSection" class="hidden">
+      <h2>Patient Scans</h2>
+      <div id="scansList"></div>
+    </div>
+  </div>
 
-  <!-- Technician Section -->
-  <section id="technician-section" style="display:none;">
-    <h2>Technician - Upload Scan</h2>
-    <input type="text" id="patientName" placeholder="Patient Name">
-    <input type="text" id="scanData" placeholder="Scan Data (URL or text)">
-    <input type="text" id="details" placeholder="Details">
-    <button id="upload-btn">Upload Scan</button>
-    <p id="upload-message" class="message"></p>
-    <button id="logout-tech-btn" class="logout-btn">Logout</button>
-  </section>
-
-  <!-- Dentist Section -->
-  <section id="dentist-section" style="display:none;">
-    <h2>Dentist - View Scans</h2>
-    <button id="view-scans-btn">View Scans</button>
-    <table id="scans-table">
-      <thead>
-        <tr>
-          <th>Patient Name</th>
-          <th>Scan Data</th>
-          <th>Details</th>
-          <th>Uploaded By</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Scans will appear here -->
-      </tbody>
-    </table>
-    <button id="logout-dent-btn" class="logout-btn">Logout</button>
-  </section>
-
-  <!-- JS Script -->
   <script src="script.js"></script>
 </body>
 </html>
-
-
-

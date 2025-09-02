@@ -1,123 +1,130 @@
-// script.js
+const BASE_URL = "https://oralvis-production.up.railway.app";
 
-const backendUrl = "https://oralvis-production.up.railway.app"; // Your Railway backend URL
-
-// Elements
-const loginForm = document.getElementById("loginForm");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const uploadForm = document.getElementById("uploadForm");
-const scansContainer = document.getElementById("scansContainer");
-
-// Check session on load
 document.addEventListener("DOMContentLoaded", () => {
-  const session = JSON.parse(localStorage.getItem("session"));
-  if (session) {
-    showApp(session);
-    fetchScans();
+  const loginBtn = document.getElementById("loginBtn");
+  const uploadBtn = document.getElementById("uploadBtn");
+
+  if (loginBtn) {
+    loginBtn.addEventListener("click", login);
+  }
+
+  if (uploadBtn) {
+    uploadBtn.addEventListener("click", uploadScan);
   }
 });
 
-// Login
-loginBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
+// 🔹 Login Function
+async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const message = document.getElementById("loginMessage");
 
-  if (!email || !password) {
-    alert("Please enter email and password");
+  try {
+    const response = await fetch(`${BASE_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      message.innerText = data.error || "Login failed";
+      return;
+    }
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.role);
+
+    message.innerText = "Login successful ✅";
+
+    if (data.role === "technician") {
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("technicianSection").classList.remove("hidden");
+    } else if (data.role === "dentist") {
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("dentistSection").classList.remove("hidden");
+      fetchScans();
+    }
+  } catch (error) {
+    message.innerText = "Error connecting to server";
+  }
+}
+
+// 🔹 Upload Scan (Technician)
+async function uploadScan() {
+  const patientName = document.getElementById("patientName").value.trim();
+  const scanFile = document.getElementById("scanFile").files[0];
+  const message = document.getElementById("uploadMessage");
+
+  if (!patientName || !scanFile) {
+    message.innerText = "Enter all fields!";
     return;
   }
 
+  const formData = new FormData();
+  formData.append("patientName", patientName);
+  formData.append("scanFile", scanFile);
+
   try {
-    const res = await fetch(`${backendUrl}/login`, {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${BASE_URL}/upload`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData
     });
-    const data = await res.json();
-    if (data.success) {
-      localStorage.setItem("session", JSON.stringify(data.session));
-      showApp(data.session);
-      fetchScans();
-    } else {
-      alert(data.message || "Login failed");
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      message.innerText = data.error || "Upload failed";
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    alert("Error connecting to server");
-  }
-});
 
-// Logout
-logoutBtn?.addEventListener("click", () => {
-  localStorage.removeItem("session");
-  location.reload();
-});
-
-// Show app after login
-function showApp(session) {
-  document.getElementById("loginSection").style.display = "none";
-  document.getElementById("appSection").style.display = "block";
-
-  if (session.role === "technician") {
-    document.getElementById("uploadSection").style.display = "block";
-  } else {
-    document.getElementById("uploadSection").style.display = "none";
+    message.innerText = "Scan uploaded successfully ✅";
+    document.getElementById("patientName").value = "";
+    document.getElementById("scanFile").value = "";
+  } catch (error) {
+    message.innerText = "Error uploading scan";
   }
 }
 
-// Upload scan (Technician only)
-uploadForm?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const formData = new FormData(uploadForm);
-  const session = JSON.parse(localStorage.getItem("session"));
-  formData.append("uploadedBy", session.name);
-
-  try {
-    const res = await fetch(`${backendUrl}/upload`, {
-      method: "POST",
-      body: formData,
-    });
-    const data = await res.json();
-    if (data.success) {
-      alert("Scan uploaded successfully");
-      uploadForm.reset();
-      fetchScans();
-    } else {
-      alert(data.message || "Upload failed");
-    }
-  } catch (err) {
-    console.error(err);
-    alert("Error uploading scan");
-  }
-});
-
-// Fetch scans (for dentist or technician)
+// 🔹 Fetch Scans (Dentist)
 async function fetchScans() {
-  const session = JSON.parse(localStorage.getItem("session"));
-  try {
-    const res = await fetch(`${backendUrl}/scans`);
-    const data = await res.json();
-    scansContainer.innerHTML = "";
+  const scansList = document.getElementById("scansList");
+  scansList.innerHTML = "Loading scans...";
 
-    data.scans.forEach((scan) => {
-      const scanDiv = document.createElement("div");
-      scanDiv.classList.add("scanItem");
-      scanDiv.innerHTML = `
-        <h4>Patient: ${scan.patientName}</h4>
-        <p>Details: ${scan.details}</p>
-        <p>Uploaded By: ${scan.uploadedBy}</p>
-        <p>File: ${scan.scan}</p>
-        <hr>
-      `;
-      scansContainer.appendChild(scanDiv);
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${BASE_URL}/scans`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
-  } catch (err) {
-    console.error(err);
-    scansContainer.innerHTML = "<p>Error fetching scans</p>";
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      scansList.innerHTML = data.error || "Failed to load scans";
+      return;
+    }
+
+    if (data.length === 0) {
+      scansList.innerHTML = "No scans found.";
+      return;
+    }
+
+    scansList.innerHTML = "";
+    data.forEach(scan => {
+      const div = document.createElement("div");
+      div.classList.add("scan");
+      div.innerHTML = `
+        <p><strong>Patient:</strong> ${scan.patientName}</p>
+        <img src="${BASE_URL}/${scan.filePath}" alt="Scan Image" />
+      `;
+      scansList.appendChild(div);
+    });
+  } catch (error) {
+    scansList.innerHTML = "Error fetching scans";
   }
 }
+
 
