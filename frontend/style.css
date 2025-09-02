@@ -93,9 +93,9 @@ button:hover {
   font-size: 15px;
 }
 
-.message.success { color: #28a745; } /* Green */
-.message.error { color: #dc3545; }   /* Red */
-.message.info { color: #007bff; }    /* Blue */
+.message.success { color: #28a745; }
+.message.error { color: #dc3545; }
+.message.info { color: #007bff; }
 
 /* Dentist Table */
 table {
@@ -120,10 +120,14 @@ th {
   font-size: 14px;
 }
 
-tr:nth-child(even) { background-color: #e0f7fa; }
-tr:hover { background-color: #b2ebf2; transform: scale(1.02); }
+tr:nth-child(even) {
+  background-color: #e0f7fa;
+}
 
-td { font-size: 14px; color: #333; }
+tr:hover {
+  background-color: #b2ebf2;
+  transform: scale(1.01);
+}
 
 /* Responsive Design */
 @media (max-width: 600px) {
@@ -131,8 +135,14 @@ td { font-size: 14px; color: #333; }
     width: 90%;
     padding: 20px;
   }
-  button, .logout-btn { width: 100%; }
-  table, th, td { font-size: 12px; padding: 8px; }
-}
 
+  button, .logout-btn {
+    width: 100%;
+  }
+
+  table, th, td {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
 

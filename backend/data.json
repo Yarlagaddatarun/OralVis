@@ -15,31 +15,7 @@
   ],
   "sessions": [
     {
-      "token": "js5g9rbhi2",
-      "email": "dent@oralvis.com",
-      "role": "dentist",
-      "name": "Dent One"
-    },
-    {
-      "token": "qrn24kmpp4r",
-      "email": "tech@oralvis.com",
-      "role": "technician",
-      "name": "Tech One"
-    },
-    {
-      "token": "jtmhh20nktn",
-      "email": "dent@oralvis.com",
-      "role": "dentist",
-      "name": "Dent One"
-    },
-    {
-      "token": "8bx90iljhuk",
-      "email": "dent@oralvis.com",
-      "role": "dentist",
-      "name": "Dent One"
-    },
-    {
-      "token": "mq97d2svw39",
+      "token": "woxry4g7fx",
       "email": "dent@oralvis.com",
       "role": "dentist",
       "name": "Dent One"
@@ -47,189 +23,315 @@
   ],
   "scans": [
     {
-      "patientName": "Aarav Sharma",
-      "scan": "Scan001.jpg",
-      "details": "Teeth X-ray",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Ishita Gupta",
-      "scan": "Scan002.jpg",
-      "details": "Jaw CT",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Rohan Verma",
-      "scan": "Scan003.jpg",
-      "details": "Oral Cavity Check",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Sanya Singh",
-      "scan": "Scan004.jpg",
-      "details": "Wisdom Tooth",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Kabir Mehta",
-      "scan": "Scan005.jpg",
-      "details": "Root Canal",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Ananya Rao",
-      "scan": "Scan006.jpg",
-      "details": "Teeth Cleaning",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Vivaan Kapoor",
-      "scan": "Scan007.jpg",
-      "details": "Gum Check",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Tara Malhotra",
-      "scan": "Scan008.jpg",
-      "details": "Braces Installation",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Aditya Nair",
-      "scan": "Scan009.jpg",
-      "details": "Cavity Fill",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Meera Joshi",
-      "scan": "Scan010.jpg",
-      "details": "Oral Surgery",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Dhruv Chawla",
-      "scan": "Scan011.jpg",
-      "details": "X-ray Teeth",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Rhea Bansal",
-      "scan": "Scan012.jpg",
-      "details": "Jaw Alignment",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Arjun Desai",
-      "scan": "Scan013.jpg",
-      "details": "Oral Checkup",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Kiara Jain",
-      "scan": "Scan014.jpg",
-      "details": "Tooth Extraction",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Neil Kapoor",
-      "scan": "Scan015.jpg",
-      "details": "Root Canal Therapy",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Ritika Sharma",
-      "scan": "Scan016.jpg",
-      "details": "Teeth Whitening",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Aryan Patel",
-      "scan": "Scan017.jpg",
-      "details": "Dental Implant",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Sofia Verma",
-      "scan": "Scan018.jpg",
-      "details": "Gum Surgery",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Karan Malhotra",
-      "scan": "Scan019.jpg",
-      "details": "Crown Placement",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Anika Singh",
-      "scan": "Scan020.jpg",
-      "details": "Dentures",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Reyansh Nair",
-      "scan": "Scan021.jpg",
-      "details": "Oral Check",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Diya Mehta",
-      "scan": "Scan022.jpg",
-      "details": "Teeth Filling",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Vivian Rao",
-      "scan": "Scan023.jpg",
-      "details": "Root Canal Check",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Shaurya Joshi",
-      "scan": "Scan024.jpg",
-      "details": "Wisdom Tooth Check",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Mira Bansal",
-      "scan": "Scan025.jpg",
-      "details": "Braces Adjustment",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Neil Desai",
-      "scan": "Scan026.jpg",
-      "details": "Oral X-ray",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Ira Chawla",
-      "scan": "Scan027.jpg",
-      "details": "Jaw Surgery",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Kabir Jain",
-      "scan": "Scan028.jpg",
-      "details": "Gum Cleaning",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Anaya Sharma",
-      "scan": "Scan029.jpg",
-      "details": "Tooth Extraction",
-      "uploadedBy": "Tech One"
-    },
-    {
-      "patientName": "Rohan Malhotra",
-      "scan": "Scan030.jpg",
-      "details": "Cavity Filling",
-      "uploadedBy": "Tech One"
-    },
-    {
       "patientName": "Alice Johnson",
-      "scan": "URL1 or text",
+      "scan": "Scan URL 1",
       "details": "Teeth cleaning",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Bob Smith",
+      "scan": "Scan URL 2",
+      "details": "Cavity filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Charlie Lee",
+      "scan": "Scan URL 3",
+      "details": "Root canal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Diana Ross",
+      "scan": "Scan URL 4",
+      "details": "Braces checkup",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Ethan Hunt",
+      "scan": "Scan URL 5",
+      "details": "Wisdom teeth removal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Fiona Glenanne",
+      "scan": "Scan URL 6",
+      "details": "Filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "George Clooney",
+      "scan": "Scan URL 7",
+      "details": "Teeth whitening",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Hannah Montana",
+      "scan": "Scan URL 8",
+      "details": "Dental check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Ian Somerhalder",
+      "scan": "Scan URL 9",
+      "details": "Cavity",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Julia Roberts",
+      "scan": "Scan URL 10",
+      "details": "Root canal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Kevin Hart",
+      "scan": "Scan URL 11",
+      "details": "Teeth whitening",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Laura Linney",
+      "scan": "Scan URL 12",
+      "details": "Cavity filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Michael B. Jordan",
+      "scan": "Scan URL 13",
+      "details": "Root canal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Natalie Portman",
+      "scan": "Scan URL 14",
+      "details": "Braces checkup",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Oliver Stone",
+      "scan": "Scan URL 15",
+      "details": "Wisdom teeth removal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Penelope Cruz",
+      "scan": "Scan URL 16",
+      "details": "Filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Quentin Tarantino",
+      "scan": "Scan URL 17",
+      "details": "Teeth cleaning",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Rachel McAdams",
+      "scan": "Scan URL 18",
+      "details": "Dental check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Samuel L. Jackson",
+      "scan": "Scan URL 19",
+      "details": "Cavity",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Tina Fey",
+      "scan": "Scan URL 20",
+      "details": "Root canal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Uma Thurman",
+      "scan": "Scan URL 21",
+      "details": "Teeth whitening",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Vin Diesel",
+      "scan": "Scan URL 22",
+      "details": "Braces checkup",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Will Smith",
+      "scan": "Scan URL 23",
+      "details": "Filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Xavier Dolan",
+      "scan": "Scan URL 24",
+      "details": "Dental check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Yara Shahidi",
+      "scan": "Scan URL 25",
+      "details": "Cavity filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Zoe Saldana",
+      "scan": "Scan URL 26",
+      "details": "Teeth cleaning",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Aaron Taylor",
+      "scan": "Scan URL 27",
+      "details": "Root canal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Bethany Hamilton",
+      "scan": "Scan URL 28",
+      "details": "Wisdom teeth removal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Chris Hemsworth",
+      "scan": "Scan URL 29",
+      "details": "Braces checkup",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Demi Lovato",
+      "scan": "Scan URL 30",
+      "details": "Filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Eddie Redmayne",
+      "scan": "Scan URL 31",
+      "details": "Teeth whitening",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Felicity Jones",
+      "scan": "Scan URL 32",
+      "details": "Dental check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "George Clooney Jr.",
+      "scan": "Scan URL 33",
+      "details": "Cavity",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Halle Berry",
+      "scan": "Scan URL 34",
+      "details": "Root canal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Ian McKellen",
+      "scan": "Scan URL 35",
+      "details": "Teeth whitening",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Jessica Alba",
+      "scan": "Scan URL 36",
+      "details": "Braces checkup",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Keanu Reeves",
+      "scan": "Scan URL 37",
+      "details": "Filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Liam Neeson",
+      "scan": "Scan URL 38",
+      "details": "Dental check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Megan Fox",
+      "scan": "Scan URL 39",
+      "details": "Cavity filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Nick Jonas",
+      "scan": "Scan URL 40",
+      "details": "Teeth cleaning",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Olivia Wilde",
+      "scan": "Scan URL 41",
+      "details": "Root canal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Paul Rudd",
+      "scan": "Scan URL 42",
+      "details": "Wisdom teeth removal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Queen Latifah",
+      "scan": "Scan URL 43",
+      "details": "Braces checkup",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Ryan Reynolds",
+      "scan": "Scan URL 44",
+      "details": "Filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Scarlett Johansson",
+      "scan": "Scan URL 45",
+      "details": "Dental check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Tom Holland",
+      "scan": "Scan URL 46",
+      "details": "Cavity",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Uzo Aduba",
+      "scan": "Scan URL 47",
+      "details": "Root canal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Vanessa Hudgens",
+      "scan": "Scan URL 48",
+      "details": "Teeth whitening",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Willow Smith",
+      "scan": "Scan URL 49",
+      "details": "Braces checkup",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Xander Cage",
+      "scan": "Scan URL 50",
+      "details": "Filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Yvonne Strahovski",
+      "scan": "Scan URL 51",
+      "details": "Dental check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Zachary Levi",
+      "scan": "Scan URL 52",
+      "details": "Cavity filling",
       "uploadedBy": "Tech One"
     }
   ]

@@ -1,70 +1,120 @@
-const express = require('express');
-const cors = require('cors');
+// server.js - Plain Node.js backend (no npm needed)
+
+const http = require('http');
 const fs = require('fs');
-const app = express();
-const PORT = process.env.PORT || 3000;
+const url = require('url');
 
-app.use(cors());
-app.use(express.json());
+const PORT = 5000;
 
-const DATA_FILE = './data.json';
-
+// -------------------------
 // Load data
-let data = { users: [], sessions: [], scans: [] };
-if (fs.existsSync(DATA_FILE)) {
-  data = JSON.parse(fs.readFileSync(DATA_FILE));
-} else {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+// -------------------------
+let rawData = fs.readFileSync('data.json');
+let db = JSON.parse(rawData);
+
+// -------------------------
+// Helper functions
+// -------------------------
+function sendJSON(res, obj) {
+  res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+  res.end(JSON.stringify(obj));
 }
 
-// Generate random token
-function generateToken() {
-  return Math.random().toString(36).substring(2, 12);
+function parseRequestBody(req, callback) {
+  let body = '';
+  req.on('data', chunk => { body += chunk.toString(); });
+  req.on('end', () => {
+    try {
+      callback(JSON.parse(body));
+    } catch (e) {
+      callback({});
+    }
+  });
 }
 
-// Save data to file
-function saveData() {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-}
+// -------------------------
+// Server
+// -------------------------
+const server = http.createServer((req, res) => {
+  const parsedUrl = url.parse(req.url, true);
+  const path = parsedUrl.pathname;
 
-// ----------------- LOGIN -----------------
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  const user = data.users.find(u => u.email === email && u.password === password);
-  if (!user) return res.status(401).json({ error: 'Invalid email or password' });
+  // Enable CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204, {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type,Authorization'
+    });
+    res.end();
+    return;
+  }
 
-  const token = generateToken();
-  data.sessions.push({ token, email: user.email, role: user.role, name: user.name });
-  saveData();
+  // -------------------------
+  // Login
+  // -------------------------
+  if (path === '/login' && req.method === 'POST') {
+    parseRequestBody(req, body => {
+      const user = db.users.find(u => u.email === body.email && u.password === body.password);
+      if (!user) {
+        sendJSON(res, { error: 'Invalid credentials' });
+        return;
+      }
 
-  res.json({ token, name: user.name, role: user.role });
+      // Generate simple token (random string)
+      const token = Math.random().toString(36).substr(2);
+      db.sessions.push({ token, email: user.email, role: user.role, name: user.name });
+      fs.writeFileSync('data.json', JSON.stringify(db, null, 2));
+      sendJSON(res, { token, role: user.role, name: user.name });
+    });
+    return;
+  }
+
+  // -------------------------
+  // Upload Scan (Technician)
+  // -------------------------
+  if (path === '/upload' && req.method === 'POST') {
+    const authToken = req.headers['authorization'];
+    const session = db.sessions.find(s => s.token === authToken);
+    if (!session || session.role !== 'technician') {
+      sendJSON(res, { error: 'Unauthorized' });
+      return;
+    }
+
+    parseRequestBody(req, body => {
+      db.scans.push({
+        patientName: body.patientName,
+        scan: body.scan,
+        details: body.details,
+        uploadedBy: session.name
+      });
+      fs.writeFileSync('data.json', JSON.stringify(db, null, 2));
+      sendJSON(res, { message: 'Scan uploaded successfully!' });
+    });
+    return;
+  }
+
+  // -------------------------
+  // View Scans (Dentist)
+  // -------------------------
+  if (path === '/scans' && req.method === 'GET') {
+    const authToken = req.headers['authorization'];
+    const session = db.sessions.find(s => s.token === authToken);
+    if (!session || session.role !== 'dentist') {
+      sendJSON(res, { error: 'Unauthorized', scans: [] });
+      return;
+    }
+
+    sendJSON(res, { scans: db.scans });
+    return;
+  }
+
+  // 404 for other routes
+  res.writeHead(404, { 'Content-Type': 'text/plain' });
+  res.end('Not Found');
 });
 
-// ----------------- UPLOAD SCAN -----------------
-app.post('/upload', (req, res) => {
-  const { patientName, scan, details } = req.body;
-  const token = req.headers.authorization;
-  const session = data.sessions.find(s => s.token === token);
-  if (!session) return res.status(401).json({ error: 'Unauthorized' });
-
-  if (!patientName || !scan || !details) return res.status(400).json({ error: 'All fields required' });
-
-  data.scans.push({ patientName, scan, details, uploadedBy: session.name });
-  saveData();
-
-  res.json({ message: 'Scan uploaded successfully' });
+server.listen(PORT, () => {
+  console.log(`OralVis Backend is running at http://localhost:${PORT}`);
 });
 
-// ----------------- VIEW SCANS -----------------
-app.get('/scans', (req, res) => {
-  const token = req.headers.authorization;
-  const session = data.sessions.find(s => s.token === token);
-  if (!session) return res.status(401).json({ error: 'Unauthorized' });
-
-  res.json({ scans: data.scans });
-});
-
-// ----------------- START SERVER -----------------
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});

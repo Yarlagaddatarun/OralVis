@@ -1,130 +1,178 @@
-const BASE_URL = "https://oralvis-production.up.railway.app";
+// Frontend JS for OralVis
 
-document.addEventListener("DOMContentLoaded", () => {
-  const loginBtn = document.getElementById("loginBtn");
-  const uploadBtn = document.getElementById("uploadBtn");
+const loginBtn = document.getElementById('login-btn');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const loginMessage = document.getElementById('login-message');
 
-  if (loginBtn) {
-    loginBtn.addEventListener("click", login);
-  }
+const technicianSection = document.getElementById('technician-section');
+const dentistSection = document.getElementById('dentist-section');
 
-  if (uploadBtn) {
-    uploadBtn.addEventListener("click", uploadScan);
-  }
-});
+const uploadBtn = document.getElementById('upload-btn');
+const patientNameInput = document.getElementById('patientName');
+const scanDataInput = document.getElementById('scanData');
+const detailsInput = document.getElementById('details');
+const uploadMessage = document.getElementById('upload-message');
 
-// 🔹 Login Function
-async function login() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const message = document.getElementById("loginMessage");
+const viewScansBtn = document.getElementById('view-scans-btn');
+const scansTableBody = document.querySelector('#scans-table tbody');
 
-  try {
-    const response = await fetch(`${BASE_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
+const logoutTechBtn = document.getElementById('logout-tech-btn');
+const logoutDentBtn = document.getElementById('logout-dent-btn');
 
-    const data = await response.json();
+let currentToken = '';
+let currentRole = '';
 
-    if (!response.ok) {
-      message.innerText = data.error || "Login failed";
-      return;
-    }
+// -----------------
+// Login
+// -----------------
+loginBtn.addEventListener('click', async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("role", data.role);
-
-    message.innerText = "Login successful ✅";
-
-    if (data.role === "technician") {
-      document.getElementById("loginSection").classList.add("hidden");
-      document.getElementById("technicianSection").classList.remove("hidden");
-    } else if (data.role === "dentist") {
-      document.getElementById("loginSection").classList.add("hidden");
-      document.getElementById("dentistSection").classList.remove("hidden");
-      fetchScans();
-    }
-  } catch (error) {
-    message.innerText = "Error connecting to server";
-  }
-}
-
-// 🔹 Upload Scan (Technician)
-async function uploadScan() {
-  const patientName = document.getElementById("patientName").value.trim();
-  const scanFile = document.getElementById("scanFile").files[0];
-  const message = document.getElementById("uploadMessage");
-
-  if (!patientName || !scanFile) {
-    message.innerText = "Enter all fields!";
+  if (!email || !password) {
+    loginMessage.textContent = 'Please enter email and password';
+    loginMessage.className = 'message error';
     return;
   }
 
-  const formData = new FormData();
-  formData.append("patientName", patientName);
-  formData.append("scanFile", scanFile);
-
   try {
-    const token = localStorage.getItem("token");
-    const response = await fetch(`${BASE_URL}/upload`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData
+    const res = await fetch('http://localhost:5000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
-    if (!response.ok) {
-      message.innerText = data.error || "Upload failed";
+    if (!res.ok) {
+      loginMessage.textContent = data.error || 'Login failed';
+      loginMessage.className = 'message error';
       return;
     }
 
-    message.innerText = "Scan uploaded successfully ✅";
-    document.getElementById("patientName").value = "";
-    document.getElementById("scanFile").value = "";
-  } catch (error) {
-    message.innerText = "Error uploading scan";
+    // Login success
+    loginMessage.textContent = `Welcome ${data.name}! Role: ${data.role}`;
+    loginMessage.className = 'message success';
+    currentToken = data.token;
+    currentRole = data.role;
+
+    // Hide login, show correct section
+    document.getElementById('login-section').style.display = 'none';
+    if (data.role === 'technician') technicianSection.style.display = 'block';
+    if (data.role === 'dentist') dentistSection.style.display = 'block';
+
+  } catch (err) {
+    loginMessage.textContent = 'Error during login';
+    loginMessage.className = 'message error';
+    console.error(err);
   }
-}
+});
 
-// 🔹 Fetch Scans (Dentist)
-async function fetchScans() {
-  const scansList = document.getElementById("scansList");
-  scansList.innerHTML = "Loading scans...";
+// -----------------
+// Technician: Upload Scan
+// -----------------
+uploadBtn.addEventListener('click', async () => {
+  const patientName = patientNameInput.value.trim();
+  const scan = scanDataInput.value.trim();
+  const details = detailsInput.value.trim();
+
+  if (!patientName || !scan || !details) {
+    uploadMessage.textContent = 'All fields are required';
+    uploadMessage.className = 'message error';
+    return;
+  }
 
   try {
-    const token = localStorage.getItem("token");
-    const response = await fetch(`${BASE_URL}/scans`, {
-      headers: { Authorization: `Bearer ${token}` }
+    const res = await fetch('http://localhost:5000/upload', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': currentToken
+      },
+      body: JSON.stringify({ patientName, scan, details })
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
-    if (!response.ok) {
-      scansList.innerHTML = data.error || "Failed to load scans";
+    if (!res.ok) {
+      uploadMessage.textContent = data.error || 'Upload failed';
+      uploadMessage.className = 'message error';
       return;
     }
 
-    if (data.length === 0) {
-      scansList.innerHTML = "No scans found.";
+    uploadMessage.textContent = data.message;
+    uploadMessage.className = 'message success';
+
+    // Clear input fields
+    patientNameInput.value = '';
+    scanDataInput.value = '';
+    detailsInput.value = '';
+
+  } catch (err) {
+    uploadMessage.textContent = 'Error uploading scan';
+    uploadMessage.className = 'message error';
+    console.error(err);
+  }
+});
+
+// -----------------
+// Dentist: View Scans
+// -----------------
+viewScansBtn.addEventListener('click', async () => {
+  try {
+    const res = await fetch('http://localhost:5000/scans', {
+      method: 'GET',
+      headers: { 'Authorization': currentToken }
+    });
+
+    const data = await res.json();
+    scansTableBody.innerHTML = '';
+
+    if (!res.ok) {
+      scansTableBody.innerHTML = `<tr><td colspan="4">Error fetching scans</td></tr>`;
       return;
     }
 
-    scansList.innerHTML = "";
-    data.forEach(scan => {
-      const div = document.createElement("div");
-      div.classList.add("scan");
-      div.innerHTML = `
-        <p><strong>Patient:</strong> ${scan.patientName}</p>
-        <img src="${BASE_URL}/${scan.filePath}" alt="Scan Image" />
+    if (!data.scans || data.scans.length === 0) {
+      scansTableBody.innerHTML = `<tr><td colspan="4">No scans uploaded yet</td></tr>`;
+      return;
+    }
+
+    data.scans.forEach(scan => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${scan.patientName}</td>
+        <td>${scan.scan}</td>
+        <td>${scan.details}</td>
+        <td>${scan.uploadedBy}</td>
       `;
-      scansList.appendChild(div);
+      scansTableBody.appendChild(tr);
     });
-  } catch (error) {
-    scansList.innerHTML = "Error fetching scans";
+
+  } catch (err) {
+    scansTableBody.innerHTML = `<tr><td colspan="4">Error fetching scans</td></tr>`;
+    console.error(err);
   }
-}
+});
+
+// -----------------
+// Logout Buttons
+// -----------------
+logoutTechBtn.addEventListener('click', () => {
+  technicianSection.style.display = 'none';
+  document.getElementById('login-section').style.display = 'block';
+  loginMessage.textContent = '';
+  currentToken = '';
+  currentRole = '';
+});
+
+logoutDentBtn.addEventListener('click', () => {
+  dentistSection.style.display = 'none';
+  document.getElementById('login-section').style.display = 'block';
+  loginMessage.textContent = '';
+  currentToken = '';
+  currentRole = '';
+});
 
 
