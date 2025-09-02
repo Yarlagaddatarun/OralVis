@@ -26,7 +26,7 @@ let currentRole = '';
 // -----------------
 // Set backend URL (Railway deployment)
 // -----------------
-const API_URL = 'https://oralvis-production.up.railway.app'; // <- Your Railway backend URL
+const API_URL = 'https://oralvis-production.up.railway.app'; // Replace with your Railway URL
 
 // -----------------
 // Login
@@ -57,7 +57,7 @@ loginBtn.addEventListener('click', async () => {
     }
 
     // Login success
-    loginMessage.textContent = `Welcome ${data.name}! Role: ${data.role}`;
+    loginMessage.textContent = `Welcome ${data.name || email}! Role: ${data.role}`;
     loginMessage.className = 'message success';
     currentToken = data.token || '';
     currentRole = data.role;
@@ -179,8 +179,3 @@ logoutDentBtn.addEventListener('click', () => {
   currentToken = '';
   currentRole = '';
 });
-
-
-
-
-

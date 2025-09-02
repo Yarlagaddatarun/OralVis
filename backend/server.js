@@ -1,110 +1,100 @@
+// server.js - OralVis Backend
+
 const express = require("express");
 const cors = require("cors");
-const fs = require("fs");
-const path = require("path");
-
+const bodyParser = require("body-parser");
 const app = express();
-app.use(cors());
-app.use(express.json());
+const PORT = process.env.PORT || 3000;
 
-// Load data from JSON file
-const dataFile = path.join(__dirname, "data.json");
+// Enable CORS for all origins (needed for Netlify frontend)
+app.use(cors());
+
+// Parse JSON bodies
+app.use(bodyParser.json());
+
+// Temporary in-memory storage (replace with DB in real projects)
+let users = [
+  { email: "tech1@oralvis.com", password: "1234", role: "technician", name: "Tech One" },
+  { email: "dent1@oralvis.com", password: "1234", role: "dentist", name: "Dentist One" }
+];
+
+let scans = [];
 
 // -----------------
 // Routes
 // -----------------
 
-// Home route
-app.get("/", (req, res) => {
-  res.send("✅ Backend is running on Railway!");
-});
-
-// Get all data (optional)
-app.get("/data", (req, res) => {
-  fs.readFile(dataFile, "utf8", (err, jsonData) => {
-    if (err) return res.status(500).json({ error: "Failed to read data.json" });
-    try {
-      const data = JSON.parse(jsonData);
-      res.json(data);
-    } catch (parseErr) {
-      res.status(500).json({ error: "Error parsing data.json" });
-    }
-  });
-});
-
-// -----------------
-// Login Route
-// -----------------
+// Login route
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  fs.readFile(dataFile, "utf8", (err, jsonData) => {
-    if (err) return res.status(500).json({ error: "Failed to read data.json" });
-    const data = JSON.parse(jsonData);
-    const user = data.users.find(u => u.email === email && u.password === password);
-    if (!user) return res.status(401).json({ error: "Invalid email or password" });
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
 
-    // Create simple session token
-    const token = Math.random().toString(36).substring(2, 12);
-    data.sessions.push({ token, email: user.email, role: user.role, name: user.name });
+  const user = users.find(u => u.email === email && u.password === password);
 
-    fs.writeFile(dataFile, JSON.stringify(data, null, 2), (err) => {
-      if (err) return res.status(500).json({ error: "Failed to save session" });
-      res.json({ token, role: user.role, name: user.name });
-    });
+  if (!user) {
+    return res.status(401).json({ error: "Invalid email or password" });
+  }
+
+  // Generate a simple token (in real app use JWT)
+  const token = `${user.email}-token`;
+
+  res.json({ 
+    message: "Login successful", 
+    token, 
+    role: user.role, 
+    name: user.name 
   });
 });
 
-// -----------------
-// Upload Scan Route (Technician)
-// -----------------
+// Upload scan (technician)
 app.post("/upload", (req, res) => {
-  const authToken = req.headers["authorization"];
+  const token = req.headers["authorization"];
   const { patientName, scan, details } = req.body;
+
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  const user = users.find(u => `${u.email}-token` === token);
+  if (!user || user.role !== "technician") {
+    return res.status(403).json({ error: "Forbidden" });
+  }
 
   if (!patientName || !scan || !details) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  fs.readFile(dataFile, "utf8", (err, jsonData) => {
-    if (err) return res.status(500).json({ error: "Failed to read data.json" });
-    const data = JSON.parse(jsonData);
-
-    const session = data.sessions.find(s => s.token === authToken);
-    if (!session || session.role !== "technician") return res.status(403).json({ error: "Unauthorized" });
-
-    const newScan = { patientName, scan, details, uploadedBy: session.name };
-    data.scans.push(newScan);
-
-    fs.writeFile(dataFile, JSON.stringify(data, null, 2), (err) => {
-      if (err) return res.status(500).json({ error: "Failed to save scan" });
-      res.json({ message: "Scan uploaded successfully" });
-    });
+  scans.push({
+    patientName,
+    scan,
+    details,
+    uploadedBy: user.name
   });
+
+  res.json({ message: "Scan uploaded successfully" });
 });
 
-// -----------------
-// View Scans Route (Dentist)
-// -----------------
+// View scans (dentist)
 app.get("/scans", (req, res) => {
-  const authToken = req.headers["authorization"];
+  const token = req.headers["authorization"];
 
-  fs.readFile(dataFile, "utf8", (err, jsonData) => {
-    if (err) return res.status(500).json({ error: "Failed to read data.json" });
-    const data = JSON.parse(jsonData);
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
 
-    const session = data.sessions.find(s => s.token === authToken);
-    if (!session || session.role !== "dentist") return res.status(403).json({ error: "Unauthorized" });
+  const user = users.find(u => `${u.email}-token` === token);
+  if (!user || user.role !== "dentist") {
+    return res.status(403).json({ error: "Forbidden" });
+  }
 
-    res.json({ scans: data.scans });
-  });
+  res.json({ scans });
 });
 
-// -----------------
+// Test route
+app.get("/", (req, res) => res.send("OralVis Backend is running"));
+
 // Start server
-// -----------------
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
+
 
