@@ -1,100 +1,70 @@
-// server.js - OralVis Backend
-
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Enable CORS for all origins (needed for Netlify frontend)
 app.use(cors());
+app.use(express.json());
 
-// Parse JSON bodies
-app.use(bodyParser.json());
+const DATA_FILE = './data.json';
 
-// Temporary in-memory storage (replace with DB in real projects)
-let users = [
-  { email: "tech1@oralvis.com", password: "1234", role: "technician", name: "Tech One" },
-  { email: "dent1@oralvis.com", password: "1234", role: "dentist", name: "Dentist One" }
-];
+// Load data
+let data = { users: [], sessions: [], scans: [] };
+if (fs.existsSync(DATA_FILE)) {
+  data = JSON.parse(fs.readFileSync(DATA_FILE));
+} else {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+}
 
-let scans = [];
+// Generate random token
+function generateToken() {
+  return Math.random().toString(36).substring(2, 12);
+}
 
-// -----------------
-// Routes
-// -----------------
+// Save data to file
+function saveData() {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+}
 
-// Login route
-app.post("/login", (req, res) => {
+// ----------------- LOGIN -----------------
+app.post('/login', (req, res) => {
   const { email, password } = req.body;
+  const user = data.users.find(u => u.email === email && u.password === password);
+  if (!user) return res.status(401).json({ error: 'Invalid email or password' });
 
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
-  }
+  const token = generateToken();
+  data.sessions.push({ token, email: user.email, role: user.role, name: user.name });
+  saveData();
 
-  const user = users.find(u => u.email === email && u.password === password);
-
-  if (!user) {
-    return res.status(401).json({ error: "Invalid email or password" });
-  }
-
-  // Generate a simple token (in real app use JWT)
-  const token = `${user.email}-token`;
-
-  res.json({ 
-    message: "Login successful", 
-    token, 
-    role: user.role, 
-    name: user.name 
-  });
+  res.json({ token, name: user.name, role: user.role });
 });
 
-// Upload scan (technician)
-app.post("/upload", (req, res) => {
-  const token = req.headers["authorization"];
+// ----------------- UPLOAD SCAN -----------------
+app.post('/upload', (req, res) => {
   const { patientName, scan, details } = req.body;
+  const token = req.headers.authorization;
+  const session = data.sessions.find(s => s.token === token);
+  if (!session) return res.status(401).json({ error: 'Unauthorized' });
 
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
+  if (!patientName || !scan || !details) return res.status(400).json({ error: 'All fields required' });
 
-  const user = users.find(u => `${u.email}-token` === token);
-  if (!user || user.role !== "technician") {
-    return res.status(403).json({ error: "Forbidden" });
-  }
+  data.scans.push({ patientName, scan, details, uploadedBy: session.name });
+  saveData();
 
-  if (!patientName || !scan || !details) {
-    return res.status(400).json({ error: "All fields are required" });
-  }
-
-  scans.push({
-    patientName,
-    scan,
-    details,
-    uploadedBy: user.name
-  });
-
-  res.json({ message: "Scan uploaded successfully" });
+  res.json({ message: 'Scan uploaded successfully' });
 });
 
-// View scans (dentist)
-app.get("/scans", (req, res) => {
-  const token = req.headers["authorization"];
+// ----------------- VIEW SCANS -----------------
+app.get('/scans', (req, res) => {
+  const token = req.headers.authorization;
+  const session = data.sessions.find(s => s.token === token);
+  if (!session) return res.status(401).json({ error: 'Unauthorized' });
 
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
-
-  const user = users.find(u => `${u.email}-token` === token);
-  if (!user || user.role !== "dentist") {
-    return res.status(403).json({ error: "Forbidden" });
-  }
-
-  res.json({ scans });
+  res.json({ scans: data.scans });
 });
 
-// Test route
-app.get("/", (req, res) => res.send("OralVis Backend is running"));
-
-// Start server
+// ----------------- START SERVER -----------------
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-
