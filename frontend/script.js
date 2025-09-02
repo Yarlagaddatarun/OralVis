@@ -24,6 +24,11 @@ let currentToken = '';
 let currentRole = '';
 
 // -----------------
+// Set backend URL (Railway deployment)
+// -----------------
+const API_URL = 'https://oralvis-production.up.railway.app'; // <- Change to your Railway backend URL
+
+// -----------------
 // Login
 // -----------------
 loginBtn.addEventListener('click', async () => {
@@ -37,7 +42,7 @@ loginBtn.addEventListener('click', async () => {
   }
 
   try {
-    const res = await fetch('http://localhost:5000/login', {
+    const res = await fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -52,9 +57,9 @@ loginBtn.addEventListener('click', async () => {
     }
 
     // Login success
-    loginMessage.textContent = `Welcome ${data.name}! Role: ${data.role}`;
+    loginMessage.textContent = `Welcome ${data.name || email}! Role: ${data.role}`;
     loginMessage.className = 'message success';
-    currentToken = data.token;
+    currentToken = data.token || '';
     currentRole = data.role;
 
     // Hide login, show correct section
@@ -84,7 +89,7 @@ uploadBtn.addEventListener('click', async () => {
   }
 
   try {
-    const res = await fetch('http://localhost:5000/upload', {
+    const res = await fetch(`${API_URL}/upload`, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -101,7 +106,7 @@ uploadBtn.addEventListener('click', async () => {
       return;
     }
 
-    uploadMessage.textContent = data.message;
+    uploadMessage.textContent = data.message || 'Scan uploaded successfully';
     uploadMessage.className = 'message success';
 
     // Clear input fields
@@ -121,7 +126,7 @@ uploadBtn.addEventListener('click', async () => {
 // -----------------
 viewScansBtn.addEventListener('click', async () => {
   try {
-    const res = await fetch('http://localhost:5000/scans', {
+    const res = await fetch(`${API_URL}/scans`, {
       method: 'GET',
       headers: { 'Authorization': currentToken }
     });
@@ -145,7 +150,7 @@ viewScansBtn.addEventListener('click', async () => {
         <td>${scan.patientName}</td>
         <td>${scan.scan}</td>
         <td>${scan.details}</td>
-        <td>${scan.uploadedBy}</td>
+        <td>${scan.uploadedBy || ''}</td>
       `;
       scansTableBody.appendChild(tr);
     });
@@ -174,7 +179,6 @@ logoutDentBtn.addEventListener('click', () => {
   currentToken = '';
   currentRole = '';
 });
-
 
 
 

@@ -37,6 +37,12 @@
       "email": "dent@oralvis.com",
       "role": "dentist",
       "name": "Dent One"
+    },
+    {
+      "token": "mq97d2svw39",
+      "email": "dent@oralvis.com",
+      "role": "dentist",
+      "name": "Dent One"
     }
   ],
   "scans": [
