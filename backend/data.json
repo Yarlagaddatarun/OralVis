@@ -1,0 +1,230 @@
+{
+  "users": [
+    {
+      "email": "tech@oralvis.com",
+      "password": "tech123",
+      "role": "technician",
+      "name": "Tech One"
+    },
+    {
+      "email": "dent@oralvis.com",
+      "password": "dent123",
+      "role": "dentist",
+      "name": "Dent One"
+    }
+  ],
+  "sessions": [
+    {
+      "token": "js5g9rbhi2",
+      "email": "dent@oralvis.com",
+      "role": "dentist",
+      "name": "Dent One"
+    },
+    {
+      "token": "qrn24kmpp4r",
+      "email": "tech@oralvis.com",
+      "role": "technician",
+      "name": "Tech One"
+    },
+    {
+      "token": "jtmhh20nktn",
+      "email": "dent@oralvis.com",
+      "role": "dentist",
+      "name": "Dent One"
+    },
+    {
+      "token": "8bx90iljhuk",
+      "email": "dent@oralvis.com",
+      "role": "dentist",
+      "name": "Dent One"
+    }
+  ],
+  "scans": [
+    {
+      "patientName": "Aarav Sharma",
+      "scan": "Scan001.jpg",
+      "details": "Teeth X-ray",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Ishita Gupta",
+      "scan": "Scan002.jpg",
+      "details": "Jaw CT",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Rohan Verma",
+      "scan": "Scan003.jpg",
+      "details": "Oral Cavity Check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Sanya Singh",
+      "scan": "Scan004.jpg",
+      "details": "Wisdom Tooth",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Kabir Mehta",
+      "scan": "Scan005.jpg",
+      "details": "Root Canal",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Ananya Rao",
+      "scan": "Scan006.jpg",
+      "details": "Teeth Cleaning",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Vivaan Kapoor",
+      "scan": "Scan007.jpg",
+      "details": "Gum Check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Tara Malhotra",
+      "scan": "Scan008.jpg",
+      "details": "Braces Installation",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Aditya Nair",
+      "scan": "Scan009.jpg",
+      "details": "Cavity Fill",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Meera Joshi",
+      "scan": "Scan010.jpg",
+      "details": "Oral Surgery",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Dhruv Chawla",
+      "scan": "Scan011.jpg",
+      "details": "X-ray Teeth",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Rhea Bansal",
+      "scan": "Scan012.jpg",
+      "details": "Jaw Alignment",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Arjun Desai",
+      "scan": "Scan013.jpg",
+      "details": "Oral Checkup",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Kiara Jain",
+      "scan": "Scan014.jpg",
+      "details": "Tooth Extraction",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Neil Kapoor",
+      "scan": "Scan015.jpg",
+      "details": "Root Canal Therapy",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Ritika Sharma",
+      "scan": "Scan016.jpg",
+      "details": "Teeth Whitening",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Aryan Patel",
+      "scan": "Scan017.jpg",
+      "details": "Dental Implant",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Sofia Verma",
+      "scan": "Scan018.jpg",
+      "details": "Gum Surgery",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Karan Malhotra",
+      "scan": "Scan019.jpg",
+      "details": "Crown Placement",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Anika Singh",
+      "scan": "Scan020.jpg",
+      "details": "Dentures",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Reyansh Nair",
+      "scan": "Scan021.jpg",
+      "details": "Oral Check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Diya Mehta",
+      "scan": "Scan022.jpg",
+      "details": "Teeth Filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Vivian Rao",
+      "scan": "Scan023.jpg",
+      "details": "Root Canal Check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Shaurya Joshi",
+      "scan": "Scan024.jpg",
+      "details": "Wisdom Tooth Check",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Mira Bansal",
+      "scan": "Scan025.jpg",
+      "details": "Braces Adjustment",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Neil Desai",
+      "scan": "Scan026.jpg",
+      "details": "Oral X-ray",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Ira Chawla",
+      "scan": "Scan027.jpg",
+      "details": "Jaw Surgery",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Kabir Jain",
+      "scan": "Scan028.jpg",
+      "details": "Gum Cleaning",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Anaya Sharma",
+      "scan": "Scan029.jpg",
+      "details": "Tooth Extraction",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Rohan Malhotra",
+      "scan": "Scan030.jpg",
+      "details": "Cavity Filling",
+      "uploadedBy": "Tech One"
+    },
+    {
+      "patientName": "Alice Johnson",
+      "scan": "URL1 or text",
+      "details": "Teeth cleaning",
+      "uploadedBy": "Tech One"
+    }
+  ]
+}
