@@ -1,105 +1,145 @@
 // script.js
 
-const backendURL = "https://oralvis-production.up.railway.app";
+const backendUrl = "https://oralvis-production.up.railway.app";
 
-// Login form
+// Elements
 const loginForm = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const loginError = document.getElementById("loginError");
+
+const uploadForm = document.getElementById("uploadForm");
+const patientNameInput = document.getElementById("patientName");
+const scanInput = document.getElementById("scan");
+const detailsInput = document.getElementById("details");
+const uploadError = document.getElementById("uploadError");
+const uploadSuccess = document.getElementById("uploadSuccess");
+
+const scansContainer = document.getElementById("scansContainer");
+
+// Store session token and role
+let sessionToken = null;
+let userRole = null;
+
+// ---------------- LOGIN ----------------
 if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    loginError.textContent = "";
 
-        try {
-            const res = await fetch(`${backendURL}/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await res.json();
-            if (data.token) {
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("role", data.role);
-                localStorage.setItem("name", data.name);
-                alert("Login successful!");
-                window.location.href = "dashboard.html"; // redirect after login
-            } else {
-                alert(data.message || "Error during login");
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Error connecting to backend");
-        }
-    });
-}
-
-// Fetch scans
-async function fetchScans() {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
 
     try {
-        const res = await fetch(`${backendURL}/scans`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        const data = await res.json();
-        const scansContainer = document.getElementById("scansContainer");
-        if (scansContainer) {
-            scansContainer.innerHTML = "";
-            data.scans.forEach(scan => {
-                const div = document.createElement("div");
-                div.innerHTML = `
-                    <h3>Patient: ${scan.patientName}</h3>
-                    <p>Details: ${scan.details}</p>
-                    <p>Uploaded by: ${scan.uploadedBy}</p>
-                    <hr>
-                `;
-                scansContainer.appendChild(div);
-            });
-        }
+      const res = await fetch(`${backendUrl}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        sessionToken = data.token;
+        userRole = data.role;
+        // Save to localStorage to persist session
+        localStorage.setItem("token", sessionToken);
+        localStorage.setItem("role", userRole);
+        localStorage.setItem("name", data.name);
+
+        // Redirect or show upload/view page
+        window.location.href = "dashboard.html"; // replace with your page
+      } else {
+        loginError.textContent = data.message || "Login failed";
+      }
     } catch (err) {
-        console.error(err);
+      console.error(err);
+      loginError.textContent = "Network error. Try again!";
     }
+  });
 }
 
-// Upload scan (technician)
-const uploadForm = document.getElementById("uploadForm");
+// ---------------- UPLOAD SCAN ----------------
 if (uploadForm) {
-    uploadForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const patientName = document.getElementById("patientName").value;
-        const scanFile = document.getElementById("scanFile").files[0];
-        const details = document.getElementById("details").value;
-        const token = localStorage.getItem("token");
+  uploadForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    uploadError.textContent = "";
+    uploadSuccess.textContent = "";
 
-        if (!token) {
-            alert("Not logged in");
-            return;
-        }
+    const patientName = patientNameInput.value.trim();
+    const scan = scanInput.value.trim();
+    const details = detailsInput.value.trim();
 
-        const formData = new FormData();
-        formData.append("patientName", patientName);
-        formData.append("scan", scanFile);
-        formData.append("details", details);
+    if (!sessionToken || userRole !== "technician") {
+      uploadError.textContent = "You are not authorized!";
+      return;
+    }
 
-        try {
-            const res = await fetch(`${backendURL}/upload`, {
-                method: "POST",
-                headers: { "Authorization": `Bearer ${token}` },
-                body: formData
-            });
-            const data = await res.json();
-            alert(data.message || "Scan uploaded");
-        } catch (err) {
-            console.error(err);
-            alert("Error uploading scan");
-        }
-    });
+    try {
+      const res = await fetch(`${backendUrl}/upload-scan`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionToken}`,
+        },
+        body: JSON.stringify({ patientName, scan, details }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        uploadSuccess.textContent = "Scan uploaded successfully!";
+        uploadForm.reset();
+        fetchScans();
+      } else {
+        uploadError.textContent = data.message || "Upload failed";
+      }
+    } catch (err) {
+      console.error(err);
+      uploadError.textContent = "Network error. Try again!";
+    }
+  });
 }
 
-// Call fetchScans on page load if element exists
-document.addEventListener("DOMContentLoaded", () => {
-    if (document.getElementById("scansContainer")) {
-        fetchScans();
+// ---------------- FETCH SCANS ----------------
+async function fetchScans() {
+  if (!sessionToken) return;
+
+  try {
+    const res = await fetch(`${backendUrl}/scans`, {
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+      },
+    });
+    const data = await res.json();
+
+    if (res.ok && scansContainer) {
+      scansContainer.innerHTML = "";
+      data.scans.forEach((scan) => {
+        const div = document.createElement("div");
+        div.className = "scan-item";
+        div.innerHTML = `
+          <h4>${scan.patientName}</h4>
+          <p><strong>Details:</strong> ${scan.details}</p>
+          <p><strong>Uploaded By:</strong> ${scan.uploadedBy}</p>
+          <p><strong>Scan:</strong> ${scan.scan}</p>
+          <hr>
+        `;
+        scansContainer.appendChild(div);
+      });
+    } else if (!res.ok) {
+      scansContainer.textContent = data.message || "Failed to fetch scans";
     }
-});
+  } catch (err) {
+    console.error(err);
+    scansContainer.textContent = "Network error. Try again!";
+  }
+}
+
+// Fetch scans on page load if container exists
+if (scansContainer) {
+  sessionToken = localStorage.getItem("token");
+  userRole = localStorage.getItem("role");
+  fetchScans();
+}
+
